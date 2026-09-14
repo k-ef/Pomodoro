@@ -4,3 +4,6 @@ To create a pomodoro timer than can:
     - Can be stopped, paused, and reseted
     - Saves different modes (up to 10)
     - Can add checkmarks
+
+Compile and link using: 
+gcc -o pomodoro createwindow.c -municode -mwindows
