@@ -1,0 +1,6 @@
+To create a pomodoro timer than can:
+    - Adjust timer
+    - Makes sound and/or popup window when timer hits 0
+    - Can be stopped, paused, and reseted
+    - Saves different modes (up to 10)
+    - Can add checkmarks
