@@ -51,6 +51,26 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
+        case WM_CREATE:
+        {
+
+        }
+
+        case WM_DESTROY:
+        {
+            PostQuitMessage(0);
+            return 0;
+        }
+
+        case WM_PAINT: 
+        {
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hwnd, &ps);
+            FillRect(hdc, &ps.rcPaint, GetStockObject(GRAY_BRUSH));
+            EndPaint(hwnd, &ps);
+            return 0;
+        } 
+
         default: return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
 }
