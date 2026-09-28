@@ -6,7 +6,7 @@
 #include <WinDef.h>
 #include "pomodoro.h"
 
-#define PADDING 20
+#define MARGIN 20
 
 struct ClientDimensions {
     LONG X_SIZE;
@@ -53,7 +53,6 @@ void RegisterChildWindowClass(const wchar_t *class_name, HINSTANCE hInstance, LR
     wc.lpszClassName = class_name;
 
     RegisterClass(&wc);
-
 }
 
 HWND CreateChildWindow(const wchar_t *class_name, const wchar_t *caption, int x_pos, int y_pos, int x_size, int y_size, HINSTANCE hInstance, HWND parent_hwnd)
@@ -195,19 +194,19 @@ LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             ClientDim.Y_SIZE = client_window.bottom;
 
             //Timer Window
-            TimerDim.X_SIZE = (ClientDim.X_SIZE - PADDING * 2) * 0.35;
-            TimerDim.Y_SIZE = ClientDim.Y_SIZE - PADDING * 2;
+            TimerDim.X_SIZE = (ClientDim.X_SIZE - MARGIN * 2) * 0.35;
+            TimerDim.Y_SIZE = ClientDim.Y_SIZE - MARGIN * 2;
 
             RegisterChildWindowClass(TIMER_CLASS_NAME, NULL, TimerWindowProc);
-            HWND timer_hwnd = CreateChildWindow(TIMER_CLASS_NAME, NULL, PADDING, PADDING, TimerDim.X_SIZE, TimerDim.Y_SIZE, NULL, hwnd);
+            HWND timer_hwnd = CreateChildWindow(TIMER_CLASS_NAME, NULL, MARGIN, MARGIN, TimerDim.X_SIZE, TimerDim.Y_SIZE, NULL, hwnd);
 
             //Note Window
-            LONG note_x = TimerDim.X_SIZE + PADDING + 20;
-            NoteDim.X_SIZE = ClientDim.X_SIZE - PADDING - note_x;
-            NoteDim.Y_SIZE = ClientDim.Y_SIZE - PADDING * 2;
+            LONG note_x = TimerDim.X_SIZE + MARGIN + 20;
+            NoteDim.X_SIZE = ClientDim.X_SIZE - MARGIN - note_x;
+            NoteDim.Y_SIZE = ClientDim.Y_SIZE - MARGIN * 2;
 
             RegisterChildWindowClass(NOTE_CLASS_NAME, NULL, NoteWindowProc);
-            HWND note_hwnd = CreateChildWindow(NOTE_CLASS_NAME, NULL, note_x, PADDING, NoteDim.X_SIZE, NoteDim.Y_SIZE, NULL, hwnd);
+            HWND note_hwnd = CreateChildWindow(NOTE_CLASS_NAME, NULL, note_x, MARGIN, NoteDim.X_SIZE, NoteDim.Y_SIZE, NULL, hwnd);
 
             return 0;
         } 

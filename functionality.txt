@@ -6,4 +6,5 @@ To create a pomodoro timer than can:
     - Can add checkmarks
 
 Compile and link using: 
-gcc -o pomodoro createwindow.c -municode -mwindows
+gcc -o pomodoro createwindow.c -municode -mwindows 
+ gcc -o pomodoro timer.c -municode -mwindows     

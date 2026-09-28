@@ -1,6 +1,9 @@
 #ifndef POMODORO_H_
 #define POMODORO_H_
 
+#define MARGIN 20
+#define PADDING 10
+
 void RegisterChildWindowClass(const wchar_t *class_name, HINSTANCE hInstance, LRESULT(*fPtr)(HWND, UINT, WPARAM, LPARAM));
 HWND CreateChildWindow(const wchar_t *class_name, const wchar_t *caption, int x_pos, int y_pos, int x_size, int y_size, HINSTANCE hInstance, HWND parent_hwnd);
 void RegisterMainWindowClass(const wchar_t *class_name, HINSTANCE hInstance);
