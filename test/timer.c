@@ -27,6 +27,12 @@ struct NoteDimensions {
     LONG Y_SIZE;
 } NoteDim;
 
+struct Time {
+    int h;
+    int m;
+    int s;
+} Time;
+
 const wchar_t *MAIN_CLASS_NAME = L"Pomodoro"; 
 const wchar_t *TIMER_CLASS_NAME = L"Timer";
 const wchar_t *NOTE_CLASS_NAME = L"Note";
@@ -143,19 +149,21 @@ LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             PAINTSTRUCT ps;
             DWORD color;
             HFONT hFont, holdFont;
+            LOGFONT lf;
             HDC hdc = BeginPaint(hwnd, &ps);
 
-            FillRect(hdc, &ps.rcPaint, GetStockObject(GRAY_BRUSH)); //NEED TO FIX THIS
+            FillRect(hdc, &ps.rcPaint, GetStockObject(WHITE_BRUSH));
 
-            color = GetSysColor(COLOR_BTNFACE);
-            SetBkColor(hdc, color);
+            SetBkColor(hdc, (DWORD)RGB(128, 128, 128));
 
             hFont = CreateFontW(30, 0, 0, 0, FW_MEDIUM, 0, 0, 0, 0, 
-                                0, 0, 0, 0, L"Georgia");
+                                0, 0, 0, 0, L"Calibri");
             holdFont = SelectObject(hdc, hFont);
             
-            static wchar_t *time = L"6:07";
-            TextOutW(hdc, PADDING, PADDING, time, lstrlenW(time)); //relative to timer child window 
+            GetObject(holdFont, sizeof(LOGFONT), &lf);
+            // static wchar_t *time = GetTime(2, 3, 4);
+            int middle = (ps.rcPaint.right / 2) - 40;
+            TextOutW(hdc, middle, PADDING, GetTime(2, 3, 4), lstrlenW(GetTime(2, 3, 4))); //relative to timer child window 
 
             SelectObject(hdc, holdFont);
             DeleteObject(hFont);
@@ -258,3 +266,8 @@ LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
 }
 
+wchar_t *GetTime(int h, int m, int s) {
+    static wchar_t hourStr[32];
+    swprintf(hourStr, 32, L"%02d:%02d:%02d\n", h, m, s);
+    return hourStr;
+}
