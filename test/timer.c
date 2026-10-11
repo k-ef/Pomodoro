@@ -6,32 +6,6 @@
 #include <WinDef.h>
 #include "pomodoro.h"
 
-struct ClientDimensions {
-    LONG X;
-    LONG Y;
-    LONG X_SIZE;
-    LONG Y_SIZE;
-} ClientDim;
-
-struct TimerDimensions {
-    LONG X;
-    LONG Y;
-    LONG X_SIZE;
-    LONG Y_SIZE;
-} TimerDim;
-
-struct NoteDimensions {
-    LONG X;
-    LONG Y;
-    LONG X_SIZE;
-    LONG Y_SIZE;
-} NoteDim;
-
-struct Time {
-    int h;
-    int m;
-    int s;
-} Time;
 
 const wchar_t *MAIN_CLASS_NAME = L"Pomodoro"; 
 const wchar_t *TIMER_CLASS_NAME = L"Timer";
@@ -120,14 +94,51 @@ HWND CreateMainWindow(const wchar_t *class_name, const wchar_t *caption, int x_s
     return main_hwnd;
 }
 
+HWND CreateTimerButton(HWND parent, const wchar_t *btnText, int x_size, int y_size, HMENU hMenu, HINSTANCE hInstance)
+{
+    HWND btn = CreateWindowEx(
+        0,
+        L"BUTTON",
+        btnText,
+        BS_DEFPUSHBUTTON | WS_VISIBLE | WS_CHILD,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        x_size, y_size,
+        parent,
+        hMenu,
+        hInstance,
+        NULL
+    );
+
+    if (btn == NULL) {
+        return 0;
+    }
+
+    return btn;
+}
+
 LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
         case WM_CREATE:
         {
+            HWND playBtn_hwnd = CreateTimerButton(hwnd, L"Play", 80, 80, (HMENU)PLAY_BTN, NULL);
+
+            //Change button placement
+            RECT pos = {10, 10, 0, 0};
+            int btn_x = (TimerDim.X_SIZE / 2) - 80;
+            int btn_y = TimerDim.Y_SIZE - 80 - PADDING;
+            MoveWindow(playBtn_hwnd, btn_x, btn_y, 80, 80, TRUE); //Probably not gonna change this but just in case
+
             return 0;
         } 
+
+        case WM_NOTIFY:
+        case WM_COMMAND:
+        {
+            printf("bruh\n"); //TODO: Functionality
+            return 0;
+        }
 
         case WM_DESTROY:
         {
@@ -154,16 +165,21 @@ LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
             FillRect(hdc, &ps.rcPaint, GetStockObject(WHITE_BRUSH));
 
+            //Timer text specs
             SetBkColor(hdc, (DWORD)RGB(128, 128, 128));
 
-            hFont = CreateFontW(30, 0, 0, 0, FW_MEDIUM, 0, 0, 0, 0, 
+            hFont = CreateFontW(50, 0, 0, 0, FW_MEDIUM, 0, 0, 0, 0, 
                                 0, 0, 0, 0, L"Calibri");
             holdFont = SelectObject(hdc, hFont);
             
             GetObject(holdFont, sizeof(LOGFONT), &lf);
-            // static wchar_t *time = GetTime(2, 3, 4);
-            int middle = (ps.rcPaint.right / 2) - 40;
-            TextOutW(hdc, middle, PADDING, GetTime(2, 3, 4), lstrlenW(GetTime(2, 3, 4))); //relative to timer child window 
+
+            //Timer text
+            static wchar_t hourStr[32];
+            GetTime(2, 3, 4, hourStr);
+            int text_x = (ps.rcPaint.right / 2) - 75; //Hardcoded because i dont want to do the calculations
+            int text_y = 75 + PADDING;
+            TextOutW(hdc, text_x, text_y, hourStr, lstrlenW(hourStr)); //relative to timer child window 
 
             SelectObject(hdc, holdFont);
             DeleteObject(hFont);
@@ -266,8 +282,6 @@ LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     }
 }
 
-wchar_t *GetTime(int h, int m, int s) {
-    static wchar_t hourStr[32];
-    swprintf(hourStr, 32, L"%02d:%02d:%02d\n", h, m, s);
-    return hourStr;
+void GetTime(int h, int m, int s, wchar_t *hourStr) {
+    swprintf(hourStr, 32, L"%02d:%02d:%02d\0", h, m, s);
 }
