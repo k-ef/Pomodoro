@@ -7,7 +7,8 @@
 
 //HMENU
 #define PLAY_BTN 1
-
+#define RESET_BTN 2
+#define TEXTBOX 3
 
 //Structs
 struct ClientDimensions {
@@ -45,6 +46,7 @@ void RegisterMainWindowClass(const wchar_t *class_name, HINSTANCE hInstance);
 HWND CreateChildWindow(const wchar_t *class_name, const wchar_t *caption, int x_pos, int y_pos, int x_size, int y_size, HINSTANCE hInstance, HWND parent_hwnd);
 HWND CreateMainWindow(const wchar_t *class_name, const wchar_t *caption, int x_size, int y_size, HINSTANCE hInstance);
 HWND CreateTimerButton(HWND parent, const wchar_t *btnText, int x_size, int y_size, HMENU hMenu, HINSTANCE hInstance);
+HWND CreateTextBox(HWND parent, const wchar_t *caption, int x_size, int y_size, HMENU hMenu, HINSTANCE hInstance);
 
 //Window procedures
 LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
