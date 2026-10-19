@@ -6,7 +6,6 @@
 #include <WinDef.h>
 #include "pomodoro.h"
 
-
 const wchar_t *MAIN_CLASS_NAME = L"Pomodoro"; 
 const wchar_t *TIMER_CLASS_NAME = L"Timer";
 const wchar_t *NOTE_CLASS_NAME = L"Note";
@@ -116,6 +115,28 @@ HWND CreateTimerButton(HWND parent, const wchar_t *btnText, int x_size, int y_si
     return btn;
 }
 
+HWND CreateTextBox(HWND parent, const wchar_t *caption, int x_size, int y_size, HMENU hMenu, HINSTANCE hInstance)
+{
+    HWND btn = CreateWindowEx(
+        0,
+        L"EDIT",
+        caption,
+        WS_BORDER | WS_VISIBLE | WS_CHILD | WS_EX_CLIENTEDGE | ES_CENTER,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        x_size, y_size,
+        parent,
+        hMenu,
+        hInstance,
+        NULL
+    );
+
+    if (btn == NULL) {
+        return 0;
+    }
+
+    return btn;
+}
+
 LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -125,10 +146,20 @@ LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             HWND playBtn_hwnd = CreateTimerButton(hwnd, L"Play", 80, 80, (HMENU)PLAY_BTN, NULL);
 
             //Change button placement
-            RECT pos = {10, 10, 0, 0};
-            int btn_x = (TimerDim.X_SIZE / 2) - 80;
-            int btn_y = TimerDim.Y_SIZE - 80 - PADDING;
+            RECT playBtn_rect;
+            GetClientRect(playBtn_hwnd, &playBtn_rect);
+            int btn_width = playBtn_rect.right - playBtn_rect.left;
+            int btn_height = playBtn_rect.bottom - playBtn_rect.top;
+            int btn_x = (TimerDim.X_SIZE / 2) - btn_width - 5;
+            int btn_y = TimerDim.Y_SIZE - btn_height - PADDING;
+
             MoveWindow(playBtn_hwnd, btn_x, btn_y, 80, 80, TRUE); //Probably not gonna change this but just in case
+
+            HWND resetBtn_hwnd = CreateTimerButton(hwnd, L"Reset", 80, 80, (HMENU)RESET_BTN, NULL);
+            MoveWindow(resetBtn_hwnd, btn_x + btn_width + 5, btn_y, 80, 80, TRUE);
+
+            HWND textbox_hwnd = CreateTextBox(hwnd, L"HH:MM:SS", (btn_width * 2 + 25) - PADDING * 2, 20, (HMENU)TEXTBOX, NULL);
+            MoveWindow(textbox_hwnd, btn_x, btn_y - 30, (btn_width * 2 + 25) - PADDING * 2, 20, TRUE);
 
             return 0;
         } 
