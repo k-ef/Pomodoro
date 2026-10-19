@@ -5,10 +5,12 @@
 #include <windows.h>
 #include <WinDef.h>
 #include "pomodoro.h"
+#include <stdbool.h>
 
 const wchar_t *MAIN_CLASS_NAME = L"Pomodoro"; 
 const wchar_t *TIMER_CLASS_NAME = L"Timer";
 const wchar_t *NOTE_CLASS_NAME = L"Note";
+boolean isTicking = FALSE;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) 
 {
@@ -167,7 +169,20 @@ LRESULT CALLBACK TimerWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         case WM_NOTIFY:
         case WM_COMMAND:
         {
-            printf("bruh\n"); //TODO: Functionality
+            switch (LOWORD(wParam)) {
+                case PLAY_BTN:
+                {
+                    if (isTicking) {
+                        return 0;
+                    }
+                }
+
+                case RESET_BTN:
+                {
+
+                }
+
+            }
             return 0;
         }
 
